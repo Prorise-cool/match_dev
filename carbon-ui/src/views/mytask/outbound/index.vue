@@ -27,10 +27,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="客户编号" prop="customerId">
+      <el-form-item label="客户" prop="customerId">
         <el-input
           v-model="queryParams.customerId"
-          placeholder="请输入客户编号"
+          placeholder="请输入客户"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -56,11 +56,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="申请人" prop="applicant">
-        <el-input
-          v-model="queryParams.applicant"
-          placeholder="请输入申请人"
-          clearable
-          @keyup.enter.native="handleQuery"
+        <el-select v-model="queryParams.applicant" placeholder="请选择申请人" clearable>
+          <el-option v-for="item in mytaskList" :key="item.id" :label="item.linkman" :value="item.id">
+          </el-option>
+        </el-select>
         />
       </el-form-item>
       <el-form-item label="申请日期" prop="applicationDate">
@@ -425,6 +424,7 @@ export default {
         this.mytaskList = response.rows;
         this.total = response.total;
         this.loading = false;
+        console.log(this.mytaskList);
       });
     },
     // 取消按钮

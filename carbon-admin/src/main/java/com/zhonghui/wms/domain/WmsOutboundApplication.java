@@ -73,10 +73,24 @@ public class WmsOutboundApplication extends BaseEntity
     @Excel(name = "审核状态")
     private Integer approvedStatus;
 
+
+    /** 客户 */
+    @Excel(name = "客户")
+    private String linkman;
+
+
     /** 审核意见 */
     private String approvedComments;
 
-    public void setId(Long id) 
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -214,23 +228,23 @@ public class WmsOutboundApplication extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("documentNo", getDocumentNo())
-            .append("documentNoId", getDocumentNoId())
-            .append("businessType", getBusinessType())
-            .append("customerId", getCustomerId())
-            .append("documentStatus", getDocumentStatus())
-            .append("contractType", getContractType())
-            .append("applicationType", getApplicationType())
-            .append("applicant", getApplicant())
-            .append("applicationDate", getApplicationDate())
-            .append("applicationStatus", getApplicationStatus())
-            .append("approved", getApproved())
-            .append("approvedDate", getApprovedDate())
-            .append("approvedStatus", getApprovedStatus())
-            .append("approvedComments", getApprovedComments())
-            .append("remark", getRemark())
-            .toString();
+        return "WmsOutboundApplication{" +
+                "id=" + id +
+                ", documentNo='" + documentNo + '\'' +
+                ", documentNoId=" + documentNoId +
+                ", businessType=" + businessType +
+                ", customerId=" + customerId +
+                ", documentStatus=" + documentStatus +
+                ", contractType=" + contractType +
+                ", applicationType=" + applicationType +
+                ", applicant=" + applicant +
+                ", applicationDate=" + applicationDate +
+                ", applicationStatus=" + applicationStatus +
+                ", approved=" + approved +
+                ", approvedDate=" + approvedDate +
+                ", approvedStatus=" + approvedStatus +
+                ", linkman='" + linkman + '\'' +
+                ", approvedComments='" + approvedComments + '\'' +
+                '}';
     }
 }
