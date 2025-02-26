@@ -27,27 +27,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, document_no, document_no_id, business_type, customer_id, document_status, contract_type, application_type, applicant, application_date, application_status, approved, approved_date, approved_status, approved_comments, remark from wms_outbound_application
     </sql>
 
-
-    <select hid="selectWmsOutboundApplicationList" parameterType="WmsOutboundApplication" resultMap="WmsOutboundApplicationResult">
+    <select id="selectWmsOutboundApplicationList" parameterType="WmsOutboundApplication" resultMap="WmsOutboundApplicationResult">
         <include refid="selectWmsOutboundApplicationVo"/>
-
-
-        <where>  
-            <if test="documentNo != null  and documentNo != ''"> and document_no = #{documentNo}</if>
-            <if test="documentNoId != null "> and document_no_id = #{documentNoId}</if>
-            <if test="businessType != null "> and business_type = #{businessType}</if>
-            <if test="customerId != null "> and customer_id = #{customerId}</if>
-            <if test="documentStatus != null "> and document_status = #{documentStatus}</if>
-            <if test="contractType != null "> and contract_type = #{contractType}</if>
-            <if test="applicationType != null "> and application_type = #{applicationType}</if>
-            <if test="applicant != null "> and applicant = #{applicant}</if>
-            <if test="applicationDate != null "> and application_date = #{applicationDate}</if>
-            <if test="applicationStatus != null "> and application_status = #{applicationStatus}</if>
-            <if test="approved != null "> and approved = #{approved}</if>
-            <if test="approvedDate != null "> and approved_date = #{approvedDate}</if>
-            <if test="approvedStatus != null "> and approved_status = #{approvedStatus}</if>
-            <if test="approvedComments != null  and approvedComments != ''"> and approved_comments = #{approvedComments}</if>
-            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        left join scm_sale_custom on scm_sale_custom.id = wms_outbound_application.customer_id
+        <where>
+            <if test="documentNo != null and documentNo != ''"> and document_no = #{documentNo}</if>
+            <if test="documentNoId != null"> and document_no_id = #{documentNoId}</if>
+            <if test="businessType != null"> and business_type = #{businessType}</if>
+            <if test="customerId != null"> and customer_id = #{customerId}</if>
+            <if test="documentStatus != null"> and document_status = #{documentStatus}</if>
+            <if test="contractType != null"> and contract_type = #{contractType}</if>
+            <if test="applicationType != null"> and application_type = #{applicationType}</if>
+            <if test="applicant != null"> and applicant = #{applicant}</if>
+            <if test="applicationDate != null"> and application_date = #{applicationDate}</if>
+            <if test="applicationStatus != null"> and application_status = #{applicationStatus}</if>
+            <if test="approved != null"> and approved = #{approved}</if>
+            <if test="approvedDate != null"> and approved_date = #{approvedDate}</if>
+            <if test="approvedStatus != null"> and approved_status = #{approvedStatus}</if>
+            <if test="approvedComments != null and approvedComments != ''"> and approved_comments = #{approvedComments}</if>
+            <if test="remark != null and remark != ''"> and remark = #{remark}</if>
         </where>
     </select>
     
