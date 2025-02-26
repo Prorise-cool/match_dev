@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhonghui.carbonReport.mapper.ViewScmSaleDeliveryDetailsMapper">
+    
+    <resultMap type="ViewScmSaleDeliveryDetails" id="ViewScmSaleDeliveryDetailsResult">
+        <result property="deliveryId"    column="delivery_id"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="returnNum"    column="return_num"    />
+        <result property="deliveryNum"    column="delivery_num"    />
+        <result property="customName"    column="custom_name"    />
+        <result property="customId"    column="custom_id"    />
+        <result property="materialCode"    column="material_code"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialModel"    column="material_model"    />
+        <result property="materialSpecifications"    column="material_specifications"    />
+        <result property="materialUnit"    column="material_unit"    />
+        <result property="contractNumber"    column="contract_number"    />
+    </resultMap>
+
+    <sql id="selectViewScmSaleDeliveryDetailsVo">
+        select delivery_id, material_id, return_num, delivery_num, custom_name, custom_id, material_code, material_name, material_model, material_specifications, material_unit, contract_number from view_scm_sale_delivery_details
+    </sql>
+
+    <select id="selectViewScmSaleDeliveryDetailsList" parameterType="ViewScmSaleDeliveryDetails" resultMap="ViewScmSaleDeliveryDetailsResult">
+        <include refid="selectViewScmSaleDeliveryDetailsVo"/>
+        <where>  
+            <if test="materialId != null "> and material_id = #{materialId}</if>
+            <if test="customName != null  and customName != ''"> and custom_name like concat('%', #{customName}, '%')</if>
+            <if test="customId != null "> and custom_id = #{customId}</if>
+            <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+            <if test="contractNumber != null  and contractNumber != ''"> and contract_number like concat('%', #{contractNumber}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectViewScmSaleDeliveryDetailsByDeliveryId" parameterType="Long" resultMap="ViewScmSaleDeliveryDetailsResult">
+        <include refid="selectViewScmSaleDeliveryDetailsVo"/>
+        where delivery_id = #{deliveryId}
+    </select>
+        
+    <insert id="insertViewScmSaleDeliveryDetails" parameterType="ViewScmSaleDeliveryDetails">
+        insert into view_scm_sale_delivery_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deliveryId != null">delivery_id,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="returnNum != null">return_num,</if>
+            <if test="deliveryNum != null">delivery_num,</if>
+            <if test="customName != null">custom_name,</if>
+            <if test="customId != null">custom_id,</if>
+            <if test="materialCode != null">material_code,</if>
+            <if test="materialName != null">material_name,</if>
+            <if test="materialModel != null">material_model,</if>
+            <if test="materialSpecifications != null">material_specifications,</if>
+            <if test="materialUnit != null">material_unit,</if>
+            <if test="contractNumber != null">contract_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deliveryId != null">#{deliveryId},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="returnNum != null">#{returnNum},</if>
+            <if test="deliveryNum != null">#{deliveryNum},</if>
+            <if test="customName != null">#{customName},</if>
+            <if test="customId != null">#{customId},</if>
+            <if test="materialCode != null">#{materialCode},</if>
+            <if test="materialName != null">#{materialName},</if>
+            <if test="materialModel != null">#{materialModel},</if>
+            <if test="materialSpecifications != null">#{materialSpecifications},</if>
+            <if test="materialUnit != null">#{materialUnit},</if>
+            <if test="contractNumber != null">#{contractNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViewScmSaleDeliveryDetails" parameterType="ViewScmSaleDeliveryDetails">
+        update view_scm_sale_delivery_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialId != null">material_id = #{materialId},</if>
+            <if test="returnNum != null">return_num = #{returnNum},</if>
+            <if test="deliveryNum != null">delivery_num = #{deliveryNum},</if>
+            <if test="customName != null">custom_name = #{customName},</if>
+            <if test="customId != null">custom_id = #{customId},</if>
+            <if test="materialCode != null">material_code = #{materialCode},</if>
+            <if test="materialName != null">material_name = #{materialName},</if>
+            <if test="materialModel != null">material_model = #{materialModel},</if>
+            <if test="materialSpecifications != null">material_specifications = #{materialSpecifications},</if>
+            <if test="materialUnit != null">material_unit = #{materialUnit},</if>
+            <if test="contractNumber != null">contract_number = #{contractNumber},</if>
+        </trim>
+        where delivery_id = #{deliveryId}
+    </update>
+
+    <delete id="deleteViewScmSaleDeliveryDetailsByDeliveryId" parameterType="Long">
+        delete from view_scm_sale_delivery_details where delivery_id = #{deliveryId}
+    </delete>
+
+    <delete id="deleteViewScmSaleDeliveryDetailsByDeliveryIds" parameterType="String">
+        delete from view_scm_sale_delivery_details where delivery_id in 
+        <foreach item="deliveryId" collection="array" open="(" separator="," close=")">
+            #{deliveryId}
+        </foreach>
+    </delete>
+</mapper>

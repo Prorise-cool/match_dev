@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhonghui.carbonReport.mapper.ViewWmsMaterialInventoryDetailsMapper">
+    
+    <resultMap type="ViewWmsMaterialInventoryDetails" id="ViewWmsMaterialInventoryDetailsResult">
+        <result property="areaId"    column="area_id"    />
+        <result property="seatId"    column="seat_id"    />
+        <result property="manufacturer"    column="manufacturer"    />
+        <result property="batchNumber"    column="batch_number"    />
+        <result property="lockInventory"    column="lock_inventory"    />
+        <result property="existingInventory"    column="existing_inventory"    />
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="seatName"    column="seat_name"    />
+        <result property="materialId"    column="material_id"    />
+        <result property="inventoryLimit"    column="inventory_limit"    />
+        <result property="inventoryLower"    column="inventory_lower"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialModel"    column="material_model"    />
+        <result property="materialSpecifications"    column="material_specifications"    />
+        <result property="materialUnit"    column="material_unit"    />
+    </resultMap>
+
+    <sql id="selectViewWmsMaterialInventoryDetailsVo">
+        select
+            t.warehouse_id,
+            t.area_id,
+            t.seat_id,
+            t.manufacturer,
+            t.batch_number,
+            SUM(t.lock_inventory) lock_inventory,
+            SUM(t.existing_inventory) existing_inventory,
+            t.warehouse_name,
+            t.area_name,
+            t.seat_name,
+            t.material_id,
+            t.inventory_limit,
+            t.inventory_lower,
+            t.material_name,
+            t.material_model,
+            t.material_specifications,
+            t.material_unit
+        from
+            view_wms_material_inventory_details t
+    </sql>
+
+    <select id="selectViewWmsMaterialInventoryDetailsList" parameterType="ViewWmsMaterialInventoryDetails" resultMap="ViewWmsMaterialInventoryDetailsResult">
+        <include refid="selectViewWmsMaterialInventoryDetailsVo"/>
+        <where>
+            <if test="warehouseId != null "> and warehouse_id = #{warehouseId}</if>
+            <if test="areaId != null "> and area_id = #{areaId}</if>
+            <if test="seatId != null "> and seat_id = #{seatId}</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and batch_number = #{batchNumber}</if>
+            <if test="manufacturer != null  and manufacturer != ''"> and manufacturer like concat('%', #{manufacturer}, '%')</if>
+            <if test="materialId != null "> and material_id = #{materialId}</if>
+            <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+            <if test="materialModel != null  and materialModel != ''"> and material_model = #{materialModel}</if>
+            <if test="materialSpecifications != null  and materialSpecifications != ''"> and material_specifications = #{materialSpecifications}</if>
+        </where>
+        <if test="warehouseId == null and areaId == null and seatId == null"> GROUP BY t.`material_id`,t.`warehouse_id` ,t.`area_id`,t.`seat_id`,t.`batch_number`</if>
+        <if test="warehouseId != null and areaId == null and seatId == null"> GROUP BY t.`material_id`,t.`warehouse_id`,t.`batch_number`</if>
+        <if test="warehouseId != null and areaId != null and seatId == null"> GROUP BY t.`material_id`,t.`warehouse_id` ,t.`area_id`,t.`batch_number`</if>
+        <if test="warehouseId != null and areaId != null and seatId != null"> GROUP BY t.`material_id`,t.`warehouse_id` ,t.`area_id`,t.`seat_id`,t.`batch_number`</if>
+    </select>
+    
+    <select id="selectViewWmsMaterialInventoryDetailsById" parameterType="Long" resultMap="ViewWmsMaterialInventoryDetailsResult">
+        <include refid="selectViewWmsMaterialInventoryDetailsVo"/>
+        where warehouse_id = #{warehouseId}
+    </select>
+        
+    <insert id="insertViewWmsMaterialInventoryDetails" parameterType="ViewWmsMaterialInventoryDetails">
+        insert into view_wms_material_inventory_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">area_id,</if>
+            <if test="seatId != null">seat_id,</if>
+            <if test="manufacturer != null">manufacturer,</if>
+            <if test="batchNumber != null">batch_number,</if>
+            <if test="lockInventory != null">lock_inventory,</if>
+            <if test="existingInventory != null">existing_inventory,</if>
+            <if test="warehouseId != null">warehouse_id,</if>
+            <if test="warehouseName != null">warehouse_name,</if>
+            <if test="areaName != null">area_name,</if>
+            <if test="seatName != null">seat_name,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="inventoryLimit != null">inventory_limit,</if>
+            <if test="inventoryLower != null">inventory_lower,</if>
+            <if test="materialName != null">material_name,</if>
+            <if test="materialModel != null">material_model,</if>
+            <if test="materialSpecifications != null">material_specifications,</if>
+            <if test="materialUnit != null">material_unit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">#{areaId},</if>
+            <if test="seatId != null">#{seatId},</if>
+            <if test="manufacturer != null">#{manufacturer},</if>
+            <if test="batchNumber != null">#{batchNumber},</if>
+            <if test="lockInventory != null">#{lockInventory},</if>
+            <if test="existingInventory != null">#{existingInventory},</if>
+            <if test="warehouseId != null">#{warehouseId},</if>
+            <if test="warehouseName != null">#{warehouseName},</if>
+            <if test="areaName != null">#{areaName},</if>
+            <if test="seatName != null">#{seatName},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="inventoryLimit != null">#{inventoryLimit},</if>
+            <if test="inventoryLower != null">#{inventoryLower},</if>
+            <if test="materialName != null">#{materialName},</if>
+            <if test="materialModel != null">#{materialModel},</if>
+            <if test="materialSpecifications != null">#{materialSpecifications},</if>
+            <if test="materialUnit != null">#{materialUnit},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViewWmsMaterialInventoryDetails" parameterType="ViewWmsMaterialInventoryDetails">
+        update view_wms_material_inventory_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seatId != null">seat_id = #{seatId},</if>
+            <if test="manufacturer != null">manufacturer = #{manufacturer},</if>
+            <if test="batchNumber != null">batch_number = #{batchNumber},</if>
+            <if test="lockInventory != null">lock_inventory = #{lockInventory},</if>
+            <if test="existingInventory != null">existing_inventory = #{existingInventory},</if>
+            <if test="warehouseId != null">warehouse_id = #{warehouseId},</if>
+            <if test="warehouseName != null">warehouse_name = #{warehouseName},</if>
+            <if test="areaName != null">area_name = #{areaName},</if>
+            <if test="seatName != null">seat_name = #{seatName},</if>
+            <if test="materialId != null">material_id = #{materialId},</if>
+            <if test="inventoryLimit != null">inventory_limit = #{inventoryLimit},</if>
+            <if test="inventoryLower != null">inventory_lower = #{inventoryLower},</if>
+            <if test="materialName != null">material_name = #{materialName},</if>
+            <if test="materialModel != null">material_model = #{materialModel},</if>
+            <if test="materialSpecifications != null">material_specifications = #{materialSpecifications},</if>
+            <if test="materialUnit != null">material_unit = #{materialUnit},</if>
+        </trim>
+        where area_id = #{areaId}
+    </update>
+
+    <delete id="deleteViewWmsMaterialInventoryDetailsByAreaId" parameterType="Long">
+        delete from view_wms_material_inventory_details where area_id = #{areaId}
+    </delete>
+
+    <delete id="deleteViewWmsMaterialInventoryDetailsByAreaIds" parameterType="String">
+        delete from view_wms_material_inventory_details where area_id in 
+        <foreach item="areaId" collection="array" open="(" separator="," close=")">
+            #{areaId}
+        </foreach>
+    </delete>
+</mapper>

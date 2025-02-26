@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhonghui.carbonReport.mapper.ViewWmsOutWarehouseDetailsMapper">
+    
+    <resultMap type="ViewWmsOutWarehouseDetails" id="ViewWmsOutWarehouseDetailsResult">
+        <result property="materialId"    column="material_id"    />
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="warehouseAreaId"    column="warehouse_area_id"    />
+        <result property="warehouseSeatId"    column="warehouse_seat_id"    />
+        <result property="outboundNumber"    column="outbound_number"    />
+        <result property="batchNumber"    column="batch_number"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="seatName"    column="seat_name"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialModel"    column="material_model"    />
+        <result property="materialSpecifications"    column="material_specifications"    />
+        <result property="materialUnit"    column="material_unit"    />
+        <result property="businessType"    column="business_type"    />
+        <result property="applicationDate"    column="application_date"    />
+    </resultMap>
+
+    <sql id="selectViewWmsOutWarehouseDetailsVo">
+        select
+            t.material_id,
+            t.warehouse_id,
+            t.warehouse_area_id,
+            t.warehouse_seat_id,
+            SUM(outbound_number) outbound_number,
+            t.batch_number,
+            t.warehouse_name,
+            t.area_name,
+            t.seat_name,
+            t.material_name,
+            t.material_model,
+            t.material_specifications,
+            t.material_unit,
+            t.business_type,
+            t.application_date
+        from
+            view_wms_out_warehouse_details t
+    </sql>
+
+    <select id="selectViewWmsOutWarehouseDetailsList" parameterType="ViewWmsOutWarehouseDetails" resultMap="ViewWmsOutWarehouseDetailsResult">
+        <include refid="selectViewWmsOutWarehouseDetailsVo"/>
+        <where>  
+            <if test="materialId != null "> and t.material_id = #{materialId}</if>
+            <if test="warehouseId != null "> and t.warehouse_id = #{warehouseId}</if>
+            <if test="warehouseAreaId != null "> and t.warehouse_area_id = #{warehouseAreaId}</if>
+            <if test="warehouseSeatId != null "> and t.warehouse_seat_id = #{warehouseSeatId}</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and t.batch_number like concat('%', #{batchNumber}, '%')</if>
+            <if test="materialName != null  and materialName != ''"> and t.material_name like concat('%', #{materialName}, '%')</if>
+            <if test="materialModel != null  and materialModel != ''"> and t.material_model = #{materialModel}</if>
+            <if test="materialSpecifications != null  and materialSpecifications != ''"> and t.material_specifications = #{materialSpecifications}</if>
+            <if test="materialUnit != null  and materialUnit != ''"> and t.material_unit = #{materialUnit}</if>
+            <if test="businessType != null "> and t.business_type = #{businessType}</if>
+            <if test="params.beginApplicationDate != null and params.beginApplicationDate != '' and params.endApplicationDate != null and params.endApplicationDate != ''"> and t.application_date between #{params.beginApplicationDate} and #{params.endApplicationDate}</if>
+        </where>
+        GROUP BY t.`material_id`,t.`warehouse_id`,t.`warehouse_area_id`,t.`warehouse_seat_id`
+        <if test="businessType != null">,t.business_type</if>
+    </select>
+    
+    <select id="selectViewWmsOutWarehouseDetailsByMaterialId" parameterType="Long" resultMap="ViewWmsOutWarehouseDetailsResult">
+        <include refid="selectViewWmsOutWarehouseDetailsVo"/>
+        where material_id = #{materialId}
+    </select>
+</mapper>

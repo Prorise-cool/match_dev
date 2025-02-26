@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhonghui.carbonReport.mapper.ViewScmPurchasingReturnDetailsMapper">
+    
+    <resultMap type="ViewScmPurchasingReturnDetails" id="ViewScmPurchasingReturnDetailsResult">
+        <result property="materialId"    column="material_id"    />
+        <result property="returnNo"    column="return_no"    />
+        <result property="batchNumber"    column="batch_number"    />
+        <result property="demandedQuantity"    column="demanded_quantity"    />
+        <result property="arrivalQuantity"    column="arrival_quantity"    />
+        <result property="returnQuantity"    column="return_quantity"    />
+        <result property="returnDate"    column="return_date"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="materialCode"    column="material_code"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialModel"    column="material_model"    />
+        <result property="materialSpecifications"    column="material_specifications"    />
+        <result property="materialUnit"    column="material_unit"    />
+        <result property="materialPrice"    column="material_price"    />
+        <result property="saleSupplierId"    column="sale_supplier_id"    />
+    </resultMap>
+
+    <sql id="selectViewScmPurchasingReturnDetailsVo">
+        select material_id, return_no, batch_number, demanded_quantity, arrival_quantity, return_quantity, return_date, supplier_name, material_code, material_name, material_model, material_specifications, material_unit, material_price, sale_supplier_id from view_scm_purchasing_return_details
+    </sql>
+
+    <select id="selectViewScmPurchasingReturnDetailsList" parameterType="ViewScmPurchasingReturnDetails" resultMap="ViewScmPurchasingReturnDetailsResult">
+        <include refid="selectViewScmPurchasingReturnDetailsVo"/>
+        <where>  
+            <if test="materialId != null "> and material_id = #{materialId}</if>
+            <if test="returnNo != null  and returnNo != ''"> and return_no like concat('%', #{returnNo}, '%')</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and batch_number = #{batchNumber}</if>
+            <if test="params.beginReturnDate != null and params.beginReturnDate != '' and params.endReturnDate != null and params.endReturnDate != ''"> and return_date between #{params.beginReturnDate} and #{params.endReturnDate}</if>
+            <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+            <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+            <if test="saleSupplierId != null "> and sale_supplier_id = #{saleSupplierId}</if>
+        </where>
+    </select>
+</mapper>

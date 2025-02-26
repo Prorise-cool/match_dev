@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhonghui.carbonReport.mapper.ViewWmsInWarehouseDetailsMapper">
+    
+    <resultMap type="ViewWmsInWarehouseDetails" id="ViewWmsInWarehouseDetailsResult">
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="warehouseAreaId"    column="warehouse_area_id"    />
+        <result property="warehouseSeatId"    column="warehouse_seat_id"    />
+        <result property="batchNumber"    column="batch_number"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="seatName"    column="seat_name"    />
+        <result property="receiptNum"    column="receipt_num"    />
+        <result property="businessType"    column="business_type"    />
+        <result property="applicationDate"    column="application_date"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="materialModel"    column="material_model"    />
+        <result property="materialSpecifications"    column="material_specifications"    />
+        <result property="materialUnit"    column="material_unit"    />
+        <result property="materialId"    column="material_id"    />
+    </resultMap>
+
+    <sql id="selectViewWmsInWarehouseDetailsVo">
+        select
+            t.material_id,
+            t.warehouse_id,
+            t.warehouse_area_id,
+            t.warehouse_seat_id,
+            t.batch_number,
+            t.warehouse_name,
+            t.area_name,
+            t.seat_name,
+            SUM(receipt_num) receipt_num,
+            t.business_type,
+            t.application_date,
+            t.material_name,
+            t.material_model,
+            t.material_specifications,
+            t.material_unit
+        from
+            view_wms_in_warehouse_details t
+    </sql>
+
+    <select id="selectViewWmsInWarehouseDetailsList" parameterType="ViewWmsInWarehouseDetails" resultMap="ViewWmsInWarehouseDetailsResult">
+        <include refid="selectViewWmsInWarehouseDetailsVo"/>
+        <where>
+            <if test="materialId != null "> and t.material_id = #{materialId}</if>
+            <if test="warehouseId != null "> and t.warehouse_id = #{warehouseId}</if>
+            <if test="warehouseAreaId != null "> and t.warehouse_area_id = #{warehouseAreaId}</if>
+            <if test="warehouseSeatId != null "> and t.warehouse_seat_id = #{warehouseSeatId}</if>
+            <if test="batchNumber != null  and batchNumber != ''"> and t.batch_number = #{batchNumber}</if>
+            <if test="businessType != null "> and t.business_type = #{businessType}</if>
+            <if test="params.beginApplicationDate != null and params.beginApplicationDate != '' and params.endApplicationDate != null and params.endApplicationDate != ''"> and t.application_date between #{params.beginApplicationDate} and #{params.endApplicationDate}</if>
+            <if test="materialName != null  and materialName != ''"> and t.material_name like concat('%', #{materialName}, '%')</if>
+            <if test="materialModel != null  and materialModel != ''"> and t.material_model = #{materialModel}</if>
+            <if test="materialSpecifications != null  and materialSpecifications != ''"> and t.material_specifications = #{materialSpecifications}</if>
+            <if test="materialUnit != null  and materialUnit != ''"> and t.material_unit = #{materialUnit}</if>
+        </where>
+        GROUP BY t.`material_id`,t.`warehouse_id`,t.`warehouse_area_id`,t.`warehouse_seat_id`
+        <if test="businessType != null">,t.business_type</if>
+    </select>
+    
+    <select id="selectViewWmsInWarehouseDetailsById" parameterType="Long" resultMap="ViewWmsInWarehouseDetailsResult">
+        <include refid="selectViewWmsInWarehouseDetailsVo"/>
+        where material_id = #{materialId}
+    </select>
+</mapper>
