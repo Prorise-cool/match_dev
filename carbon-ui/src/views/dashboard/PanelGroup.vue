@@ -1,181 +1,157 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            访客
-          </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            消息
-          </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            金额
-          </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            订单
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-  </el-row>
+  <div class="panel-group">
+    <div ref="electricityChart" class="gauge-chart" />
+    <div ref="waterChart" class="gauge-chart" />
+    <div ref="carbonChart" class="gauge-chart" />
+  </div>
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
+import * as echarts from 'echarts';
+import resize from './mixins/resize';
 
 export default {
-  components: {
-    CountTo
+  mixins: [resize],
+  data() {
+    return {
+      electricityChart: null,
+      waterChart: null,
+      carbonChart: null,
+      energyConsumption: {
+        electricity: '', // 初始耗电量
+        water: '',       // 初始耗水量
+        carbon: ''       // 初始碳排放量
+      }
+    };
+  },
+  mounted() {
+    this.initCharts();
+    this.updateCharts();
+    setInterval(this.updateCharts, 2000);
+  },
+  beforeDestroy() {
+    if (this.electricityChart) {
+      this.electricityChart.dispose();
+    }
+    if (this.waterChart) {
+      this.waterChart.dispose();
+    }
+    if (this.carbonChart) {
+      this.carbonChart.dispose();
+    }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+    initCharts() {
+      this.electricityChart = echarts.init(this.$refs.electricityChart);
+      this.waterChart = echarts.init(this.$refs.waterChart);
+      this.carbonChart = echarts.init(this.$refs.carbonChart);
+      this.electricityChart.setOption(this.getChartOptions('电', this.energyConsumption.electricity, '#67e0e3'));
+      this.waterChart.setOption(this.getChartOptions('水', this.energyConsumption.water, '#37a2da'));
+      this.carbonChart.setOption(this.getChartOptions('碳', this.energyConsumption.carbon, '#fd666d'));
+    },
+    getChartOptions(type, value, color) {
+      return {
+        series: [
+          {
+            type: 'gauge',
+            axisLine: {
+              lineStyle: {
+                width: 30,
+                color: [[1, color]] // 只显示一个颜色
+              }
+            },
+            pointer: {
+              itemStyle: {
+                color: 'auto'
+              }
+            },
+            axisTick: {
+              distance: -30,
+              length: 8,
+              lineStyle: {
+                color: '#fff',
+                width: 2
+              }
+            },
+            splitLine: {
+              distance: -30,
+              length: 30,
+              lineStyle: {
+                color: '#fff',
+                width: 4
+              }
+            },
+            axisLabel: {
+              color: 'inherit',
+              distance: 40,
+              fontSize: 20
+            },
+            detail: {
+              valueAnimation: true,
+              formatter: () => {
+                return `${type}: ${value}`;
+              },
+              color: 'inherit'
+            },
+            data: [
+              {
+                value: value
+              }
+            ]
+          }
+        ]
+      };
+    },
+    updateCharts() {
+      // 随机生成数据以模拟变化
+      this.energyConsumption.electricity = +(Math.random() * 100).toFixed(2);
+      this.energyConsumption.water = +(Math.random() * 100).toFixed(2);
+      this.energyConsumption.carbon = +(Math.random() * 100).toFixed(2);
+
+      this.electricityChart.setOption({
+        series: [
+          {
+            data: [
+              {
+                value: this.energyConsumption.electricity
+              }
+            ]
+          }
+        ]
+      });
+
+      this.waterChart.setOption({
+        series: [
+          {
+            data: [
+              {
+                value: this.energyConsumption.water
+              }
+            ]
+          }
+        ]
+      });
+
+      this.carbonChart.setOption({
+        series: [
+          {
+            data: [
+              {
+                value: this.energyConsumption.carbon
+              }
+            ]
+          }
+        ]
+      });
     }
   }
-}
+};
 </script>
 
-<style lang="scss" scoped>
-.panel-group {
-  margin-top: 18px;
-
-  .card-panel-col {
-    margin-bottom: 32px;
-  }
-
-  .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
-
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-
-      .icon-people {
-        background: #40c9c6;
-      }
-
-      .icon-message {
-        background: #36a3f7;
-      }
-
-      .icon-money {
-        background: #f4516c;
-      }
-
-      .icon-shopping {
-        background: #34bfa3
-      }
-    }
-
-    .icon-people {
-      color: #40c9c6;
-    }
-
-    .icon-message {
-      color: #36a3f7;
-    }
-
-    .icon-money {
-      color: #f4516c;
-    }
-
-    .icon-shopping {
-      color: #34bfa3
-    }
-
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-
-      .card-panel-num {
-        font-size: 20px;
-      }
-    }
-  }
-}
-
-@media (max-width:550px) {
-  .card-panel-description {
-    display: none;
-  }
-
-  .card-panel-icon-wrapper {
-    float: none !important;
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-
-    .svg-icon {
-      display: block;
-      margin: 14px auto !important;
-      float: none !important;
-    }
-  }
+<style scoped>
+.gauge-chart {
+  width: 100%;
+  height: 300px; /* Adjust height as needed */
+  margin-bottom: 20px; /* Add some space between charts */
 }
 </style>
