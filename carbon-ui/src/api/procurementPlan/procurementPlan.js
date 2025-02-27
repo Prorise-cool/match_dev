@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询供应链SCM-采购管理-采购计划列表
-export function listPlan(query) {
+export function listProcurementPlan(query) {
   return request({
-    url: '/plan/plan/list',
+    url: '/procurementPlan/procurementPlan/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询供应链SCM-采购管理-采购计划详细
-export function getPlan(id) {
+export function getProcurementPlan(id) {
   return request({
-    url: '/plan/plan/' + id,
+    url: '/procurementPlan/procurementPlan/' + id,
     method: 'get'
   })
 }
 
 // 新增供应链SCM-采购管理-采购计划
-export function addPlan(data) {
+export function addProcurementPlan(data) {
   return request({
-    url: '/plan/plan',
+    url: '/procurementPlan/procurementPlan',
     method: 'post',
     data: data
   })
 }
 
 // 修改供应链SCM-采购管理-采购计划
-export function updatePlan(data) {
+export function updateProcurementPlan(data) {
   return request({
-    url: '/plan/plan',
+    url: '/procurementPlan/procurementPlan',
     method: 'put',
     data: data
   })
 }
 
 // 删除供应链SCM-采购管理-采购计划
-export function delPlan(id) {
+export function delProcurementPlan(id) {
   return request({
-    url: '/plan/plan/' + id,
+    url: '/procurementPlan/procurementPlan/' + id,
     method: 'delete'
   })
 }
