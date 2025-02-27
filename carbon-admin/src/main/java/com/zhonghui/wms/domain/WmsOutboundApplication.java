@@ -78,9 +78,23 @@ public class WmsOutboundApplication extends BaseEntity
     @Excel(name = "客户")
     private String linkman;
 
+    /** 客户名称 */
+    @Excel(name = "客户")
+    private String applicantName;
+
+
+
 
     /** 审核意见 */
     private String approvedComments;
+
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
+    }
 
     public String getLinkman() {
         return linkman;

@@ -28,12 +28,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="客户" prop="customerId">
-        <el-input
-          v-model="queryParams.customerId"
-          placeholder="请输入客户"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.customerId" placeholder="请选择客户" clearable>
+          <el-option v-for="item in mytaskList" :key="item.id" :label="item.linkman" :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="合同类型:" prop="contractType">
         <el-select v-model="queryParams.contractType" placeholder="请选择合同类型:" clearable>
@@ -57,7 +55,7 @@
       </el-form-item>
       <el-form-item label="申请人" prop="applicant">
         <el-select v-model="queryParams.applicant" placeholder="请选择申请人" clearable>
-          <el-option v-for="item in mytaskList" :key="item.id" :label="item.linkman" :value="item.id">
+          <el-option v-for="item in mytaskList" :key="item.applicant" :label="item.applicantName" :value="item.applicant">
           </el-option>
         </el-select>
         />
@@ -81,11 +79,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="审核人" prop="approved">
-        <el-input
-          v-model="queryParams.approved"
-          placeholder="请输入审核人"
-          clearable
-          @keyup.enter.native="handleQuery"
+        <el-select v-model="queryParams.approved" placeholder="请选择审核人" clearable>
+          <el-option v-for="item in mytaskList" :key="item.applicant" :label="item.applicantName" :value="item.applicant">
+          </el-option>
+        </el-select>
         />
       </el-form-item>
       <el-form-item label="审核日期" prop="approvedDate">

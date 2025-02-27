@@ -22,11 +22,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="approvedComments"    column="approved_comments"    />
         <result property="remark"    column="remark"    />
         <result property="linkman"    column="linkman"    />
+        <result property="applicantName" column="applicant_name" />
     </resultMap>
     <sql id="selectWmsOutboundApplicationVo">
-        select wms_outbound_application.id, document_no, document_no_id, business_type, customer_id, document_status, contract_type, application_type, applicant, application_date, application_status, approved, approved_date, approved_status, approved_comments, wms_outbound_application.remark,scm_sale_custom.linkman
-        from wms_outbound_application
-                 left join scm_sale_custom on scm_sale_custom.id = wms_outbound_application.customer_id
+        select
+            wms_outbound_application.id as outbound_id,  -- 明确指定表名并重命名
+            scm_sale_custom.linkman,
+            document_no,
+            document_no_id,
+            business_type,
+            wms_outbound_application.applicant_name,
+            customer_id,
+            document_status,
+            contract_type,
+            application_type,
+            applicant,
+            application_date,
+            application_status,
+            approved,
+            approved_date,
+            approved_status,
+            approved_comments,
+            wms_outbound_application.remark  -- 明确指定表名
+        from
+            wms_outbound_application
+                left join
+            scm_sale_custom on scm_sale_custom.id = wms_outbound_application.customer_id
     </sql>
 
 
